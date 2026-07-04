@@ -31,3 +31,7 @@ Thumbs.db
 # Proyecto
 *.log
 thumbnails_cache/
+
+# Otros Archivos
+ESPECIFICACION.md
+
