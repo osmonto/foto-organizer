@@ -64,22 +64,22 @@ foto-organizer/
 ### FASE 0 — Setup e Infraestructura
 **Branch:** `feat/setup-infrastructure`
 
-- [ ] **F-00** Inicializar repositorio GitHub con `.gitignore` para Python
-- [ ] **F-01** Configurar `uv` como gestor de paquetes (`pyproject.toml`)
-- [ ] **F-02** Configurar **Ruff** (linting + formatting)
+- [x] **F-00** Inicializar repositorio GitHub con `.gitignore` para Python *(git local; repo remoto pendiente)*
+- [x] **F-01** Configurar `uv` como gestor de paquetes (`pyproject.toml`)
+- [x] **F-02** Configurar **Ruff** (linting + formatting)
   - Reglas: `E, W, F, I, N, UP, B, SIM, TCH`
   - Line length: 88
-- [ ] **F-03** Configurar **mypy** en modo estricto (`strict = true`)
-- [ ] **F-04** Configurar **pre-commit** hooks
+- [x] **F-03** Configurar **mypy** en modo estricto (`strict = true`)
+- [x] **F-04** Configurar **pre-commit** hooks
   - Hook 1: `ruff check --fix`
   - Hook 2: `ruff format`
   - Hook 3: `mypy`
-- [ ] **F-05** Configurar **GitHub Actions** CI pipeline
+- [x] **F-05** Configurar **GitHub Actions** CI pipeline
   - Trigger: push + pull_request
   - Jobs: lint → type-check → tests
-- [ ] **F-06** Crear estructura de directorios del proyecto
-- [ ] **F-07** Configurar **loguru** para logging centralizado
-- [ ] **F-08** Escribir `README.md` inicial con instrucciones de setup
+- [x] **F-06** Crear estructura de directorios del proyecto
+- [x] **F-07** Configurar **loguru** para logging centralizado
+- [x] **F-08** Escribir `README.md` inicial con instrucciones de setup
 
 ---
 
