@@ -88,21 +88,21 @@ foto-organizer/
 
 > ⚠️ **Regla de oro:** NUNCA se borra el original. El borrado solo ocurre tras verificación explícita.
 
-- [ ] **F-10** `scanner.py` — Escanear directorio fuente
+- [x] **F-10** `scanner.py` — Escanear directorio fuente
   - Detectar fotos: `.jpg`, `.jpeg`, `.png`, `.heic`, `.raw`, `.dng`, `.tiff`
   - Detectar vídeos: `.mp4`, `.mov`, `.avi`, `.mkv`, `.m4v`
   - Retornar lista tipada con metadata básica
-- [ ] **F-11** `hasher.py` — Calcular hash MD5 + SHA256 de cada archivo
+- [x] **F-11** `hasher.py` — Calcular hash MD5 + SHA256 de cada archivo
   - Usado para verificar integridad del backup
-- [ ] **F-12** `backup.py` — Copiar archivos a directorio de backup
+- [x] **F-12** `backup.py` — Copiar archivos a directorio de backup
   - Copiar con `shutil.copy2` (preserva metadata del filesystem)
   - Crear manifiesto JSON con: ruta original, ruta copia, hash, fecha
   - **Nunca mover, siempre copiar**
-- [ ] **F-13** `verifier.py` — Verificar integridad del backup
+- [x] **F-13** `verifier.py` — Verificar integridad del backup
   - Comparar hash origen vs. hash destino archivo por archivo
   - Generar reporte de verificación (`verification_report.json`)
   - Estados posibles: `OK`, `HASH_MISMATCH`, `MISSING`
-- [ ] **F-14** `cleaner.py` — Borrado seguro del origen
+- [x] **F-14** `cleaner.py` — Borrado seguro del origen
   - **Solo ejecutable si** `verifier.py` retorna 100% OK
   - Requiere confirmación explícita del usuario (doble confirmación)
   - Registra cada borrado en log de auditoría
@@ -168,15 +168,15 @@ foto-organizer/
 ### FASE 4 — Tests
 **Branch:** `feat/tests`
 
-- [ ] **F-40** Tests unitarios `test_backup.py`
+- [x] **F-40** Tests unitarios `test_backup.py`
   - Test: copia correcta de archivos
   - Test: generación correcta del manifiesto JSON
   - Test: backup no modifica original
-- [ ] **F-41** Tests unitarios `test_verifier.py`
+- [x] **F-41** Tests unitarios `test_verifier.py`
   - Test: verificación OK con archivos íntegros
   - Test: detección de hash mismatch
   - Test: detección de archivo faltante
-- [ ] **F-42** Tests unitarios `test_scanner.py`
+- [x] **F-42** Tests unitarios `test_scanner.py`
   - Test: detección correcta de formatos
   - Test: manejo de directorios vacíos
   - Test: manejo de archivos sin extensión
