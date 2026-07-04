@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from foto_organizer.core.backup import run_backup
+from foto_organizer.core.backup import MANIFEST_FILENAME, run_backup
 from foto_organizer.core.organizer import (
     QUARANTINE_DIRNAME,
     apply_organization,
@@ -262,12 +262,23 @@ class MainWindow(QMainWindow):
         if not to_remove:
             return
         quarantine_duplicates(to_remove, source)
-        QMessageBox.information(
-            self,
-            "Duplicados movidos",
+        message = (
             f"{len(to_remove)} duplicado(s) movido(s) a "
-            f"'{QUARANTINE_DIRNAME}' dentro del origen para tu revisión.",
+            f"'{QUARANTINE_DIRNAME}' dentro del origen para tu revisión."
         )
+        backup_exists = (
+            self._backup_dir is not None
+            and (self._backup_dir / MANIFEST_FILENAME).is_file()
+        )
+        if backup_exists:
+            message += (
+                "\n\nYa existe un backup para este origen: sus rutas quedaron "
+                "desactualizadas por este movimiento. Vuelve a ejecutar "
+                '"Ejecutar backup" antes de verificar y borrar el origen, o la '
+                "verificación marcará estos archivos como 'faltantes' y bloqueará "
+                "el borrado de todo el backup."
+            )
+        QMessageBox.information(self, "Duplicados movidos", message)
         self._scan_and_populate_gallery(source)
 
     def _organize_by_date(self) -> None:

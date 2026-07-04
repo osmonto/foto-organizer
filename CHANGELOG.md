@@ -12,6 +12,12 @@ versionado según [SemVer](https://semver.org/lang/es/).
   esas dos acciones poblaban `_media_files` pero nunca llamaban a
   `gallery.set_media_files`. Ahora las tres rutas de escaneo comparten
   `_scan_and_populate_gallery`.
+- Si ya existía un backup para el origen, mover un duplicado a cuarentena
+  desactualizaba el manifiesto: `verify_backup` marcaba ese archivo como
+  `MISSING` (porque ya no está en su ruta original) y eso bloqueaba el
+  borrado seguro de **todo** el backup, no solo del duplicado. Ahora la app
+  avisa explícitamente que hay que repetir "Ejecutar backup" antes de
+  verificar y borrar el origen.
 
 ### Added
 
