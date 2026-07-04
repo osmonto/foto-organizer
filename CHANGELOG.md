@@ -21,6 +21,9 @@ versionado según [SemVer](https://semver.org/lang/es/).
 
 ### Added
 
+- Guía de uso dentro de la app (`Ayuda -> Guía de uso`, `help_dialog.py`):
+  explica paso a paso cada acción del menú Herramientas y las reglas de
+  seguridad. La misma guía se refleja en el README.
 - Diálogo de duplicados (F-35): cada opción muestra una miniatura junto al
   radio button, para identificar visualmente qué foto es cada una en vez de
   leer la ruta completa (los archivos sin vista previa válida muestran su

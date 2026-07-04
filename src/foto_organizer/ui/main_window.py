@@ -31,6 +31,7 @@ from foto_organizer.core.scanner import MediaFile, scan_directory
 from foto_organizer.core.verifier import verify_backup, write_verification_report
 from foto_organizer.ui.duplicates_dialog import DuplicatesDialog
 from foto_organizer.ui.gallery_view import GalleryView
+from foto_organizer.ui.help_dialog import HelpDialog
 from foto_organizer.ui.settings_dialog import SettingsDialog
 from foto_organizer.ui.verification_dialog import VerificationDialog
 from foto_organizer.ui.workers import OperationWorker, QtLogSink
@@ -97,6 +98,7 @@ class MainWindow(QMainWindow):
         tools_menu.addAction("Configuración…", self._open_settings)
 
         help_menu = self.menuBar().addMenu("A&yuda")
+        help_menu.addAction("Guía de uso", self._show_help)
         help_menu.addAction("Acerca de", self._show_about)
 
     # --- Panel de progreso (F-33) -------------------------------------------
@@ -302,6 +304,9 @@ class MainWindow(QMainWindow):
         if dialog.exec() == SettingsDialog.DialogCode.Accepted:
             self._settings = dialog.settings()
             save_settings(self._settings)
+
+    def _show_help(self) -> None:
+        HelpDialog(self).exec()
 
     def _show_about(self) -> None:
         QMessageBox.information(
