@@ -1,10 +1,15 @@
 """Vista de duplicados: grupos con selección manual de cuál conservar (F-35)."""
 
+from pathlib import Path
+
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QButtonGroup,
     QDialog,
     QDialogButtonBox,
     QGroupBox,
+    QHBoxLayout,
     QLabel,
     QRadioButton,
     QScrollArea,
@@ -13,6 +18,8 @@ from PySide6.QtWidgets import (
 )
 
 from foto_organizer.core.organizer import DuplicateGroup, DuplicateReport
+
+_THUMBNAIL_SIZE = 96
 
 
 class DuplicatesDialog(QDialog):
@@ -59,12 +66,17 @@ class DuplicatesDialog(QDialog):
         button_group = QButtonGroup(box)
         button_group.setExclusive(True)
         for index, path in enumerate(group.paths):
+            row = QHBoxLayout()
+            row.addWidget(_thumbnail_label(path))
+
             radio = QRadioButton(path)
             radio.setProperty("path", path)
             if index == 0:
                 radio.setChecked(True)
             button_group.addButton(radio)
-            box_layout.addWidget(radio)
+            row.addWidget(radio, stretch=1)
+
+            box_layout.addLayout(row)
         self._button_groups.append(button_group)
         return box
 
@@ -76,3 +88,25 @@ class DuplicatesDialog(QDialog):
             kept_path = checked.property("path") if checked is not None else None
             to_remove.extend(path for path in group.paths if path != kept_path)
         return to_remove
+
+
+def _thumbnail_label(path: str) -> QLabel:
+    """Miniatura de ``path`` para poder identificar visualmente qué archivo es
+    cada opción, en vez de tener que leer la ruta completa."""
+    label = QLabel()
+    label.setFixedSize(_THUMBNAIL_SIZE, _THUMBNAIL_SIZE)
+    label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    pixmap = QPixmap(path)
+    if pixmap.isNull():
+        label.setText(Path(path).suffix.lstrip(".").upper() or "?")
+    else:
+        label.setPixmap(
+            pixmap.scaled(
+                _THUMBNAIL_SIZE,
+                _THUMBNAIL_SIZE,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+    return label

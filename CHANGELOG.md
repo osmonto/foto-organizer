@@ -21,6 +21,10 @@ versionado según [SemVer](https://semver.org/lang/es/).
 
 ### Added
 
+- Diálogo de duplicados (F-35): cada opción muestra una miniatura junto al
+  radio button, para identificar visualmente qué foto es cada una en vez de
+  leer la ruta completa (los archivos sin vista previa válida muestran su
+  extensión como texto).
 - Diálogo de duplicados (F-35): al aceptar, los duplicados no elegidos para
   conservar (`quarantine_duplicates` en `organizer.py`) se mueven a
   `duplicados_a_revisar/` dentro del origen, preservando la ruta relativa
