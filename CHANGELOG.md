@@ -7,6 +7,10 @@ versionado según [SemVer](https://semver.org/lang/es/).
 
 ### Added
 
+- Fase 4 — Tests de integración (`test_integration.py`, F-44): flujo completo
+  scan → backup → verify (sin borrado del origen) y flujo con detección de
+  duplicados combinado con organización por fecha, ejercitando varios
+  módulos del core juntos en vez de aislados.
 - Fase 3 — Interfaz de usuario (PySide6): `main_window.py` (ventana
   principal con menús Archivo/Herramientas/Ayuda, árbol de carpetas del
   origen, selección de directorios origen/backup con validación de que

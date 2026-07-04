@@ -195,7 +195,7 @@ foto-organizer/
   - Test: organización correcta por fecha EXIF
   - Test: fallback a fecha de modificación
   - Test: manejo de colisiones de nombres
-- [ ] **F-44** Tests de integración
+- [x] **F-44** Tests de integración
   - Flujo completo: scan → backup → verify → (no delete)
   - Flujo con duplicados
 
