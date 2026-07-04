@@ -205,3 +205,27 @@ def write_duplicate_report(report: DuplicateReport, destination: Path) -> Path:
         json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8"
     )
     return report_path
+
+
+QUARANTINE_DIRNAME = "duplicados_a_revisar"
+
+
+def quarantine_duplicates(paths: Sequence[str], source_root: Path) -> list[Path]:
+    """Mueve cada ruta de ``paths`` a ``source_root/duplicados_a_revisar/...``.
+
+    Es la única operación de este módulo que muta el origen: en vez de borrar
+    duplicados directamente, los aparta para que el usuario los revise y
+    borre a mano cuando quiera. Preserva la ruta relativa a ``source_root``
+    para evitar colisiones de nombre entre duplicados de distintas carpetas.
+    """
+    quarantine_root = source_root / QUARANTINE_DIRNAME
+    moved: list[Path] = []
+    for raw_path in paths:
+        original = Path(raw_path)
+        relative = original.relative_to(source_root)
+        target = quarantine_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(original), str(target))
+        logger.info("Duplicado movido a cuarentena: {} -> {}", original, target)
+        moved.append(target)
+    return moved

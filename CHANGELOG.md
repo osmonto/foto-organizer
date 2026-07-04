@@ -5,8 +5,21 @@ versionado según [SemVer](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Fixed
+
+- La galería (F-32) no se refrescaba si el usuario iba directo a "Buscar
+  duplicados" u "Organizar por fecha" sin pasar antes por "Escanear origen":
+  esas dos acciones poblaban `_media_files` pero nunca llamaban a
+  `gallery.set_media_files`. Ahora las tres rutas de escaneo comparten
+  `_scan_and_populate_gallery`.
+
 ### Added
 
+- Diálogo de duplicados (F-35): al aceptar, los duplicados no elegidos para
+  conservar (`quarantine_duplicates` en `organizer.py`) se mueven a
+  `duplicados_a_revisar/` dentro del origen, preservando la ruta relativa
+  para evitar colisiones de nombre. Antes el diálogo solo permitía marcar
+  cuál conservar, sin ninguna acción real de limpieza conectada.
 - Fase 4 — Tests de integración (`test_integration.py`, F-44): flujo completo
   scan → backup → verify (sin borrado del origen) y flujo con detección de
   duplicados combinado con organización por fecha, ejercitando varios

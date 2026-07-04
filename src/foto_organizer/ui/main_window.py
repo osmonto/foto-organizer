@@ -21,9 +21,11 @@ from PySide6.QtWidgets import (
 
 from foto_organizer.core.backup import run_backup
 from foto_organizer.core.organizer import (
+    QUARANTINE_DIRNAME,
     apply_organization,
     build_duplicate_report,
     plan_organization,
+    quarantine_duplicates,
 )
 from foto_organizer.core.scanner import MediaFile, scan_directory
 from foto_organizer.core.verifier import verify_backup, write_verification_report
@@ -196,9 +198,14 @@ class MainWindow(QMainWindow):
         source = self._require_source_dir()
         if source is None:
             return
+        self._scan_and_populate_gallery(source)
+        self.statusBar().showMessage(f"{len(self._media_files)} archivo(s) encontrados")
+
+    def _scan_and_populate_gallery(self, source: Path) -> None:
+        """Escanea ``source`` y refresca la galería, para que cualquier acción que
+        dispare un escaneo (no solo "Escanear origen") deje ver los thumbnails."""
         self._media_files = scan_directory(source)
         self._gallery.set_media_files(self._media_files, THUMBNAIL_CACHE_DIR)
-        self.statusBar().showMessage(f"{len(self._media_files)} archivo(s) encontrados")
 
     def _run_backup(self) -> None:
         source = self._require_source_dir()
@@ -240,22 +247,35 @@ class MainWindow(QMainWindow):
         )
 
     def _find_duplicates(self) -> None:
+        source = self._require_source_dir()
+        if source is None:
+            return
         if not self._media_files:
-            source = self._require_source_dir()
-            if source is None:
-                return
-            self._media_files = scan_directory(source)
+            self._scan_and_populate_gallery(source)
 
         report = build_duplicate_report(self._media_files)
         dialog = DuplicatesDialog(report, self)
-        dialog.exec()
+        if dialog.exec() != DuplicatesDialog.DialogCode.Accepted:
+            return
+
+        to_remove = dialog.paths_to_remove()
+        if not to_remove:
+            return
+        quarantine_duplicates(to_remove, source)
+        QMessageBox.information(
+            self,
+            "Duplicados movidos",
+            f"{len(to_remove)} duplicado(s) movido(s) a "
+            f"'{QUARANTINE_DIRNAME}' dentro del origen para tu revisión.",
+        )
+        self._scan_and_populate_gallery(source)
 
     def _organize_by_date(self) -> None:
         if not self._media_files:
             source = self._require_source_dir()
             if source is None:
                 return
-            self._media_files = scan_directory(source)
+            self._scan_and_populate_gallery(source)
 
         destination = QFileDialog.getExistingDirectory(
             self, "Seleccionar directorio destino organizado"

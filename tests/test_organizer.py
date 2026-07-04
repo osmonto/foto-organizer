@@ -8,6 +8,7 @@ from PIL import Image
 from PIL.ExifTags import IFD
 
 from foto_organizer.core.organizer import (
+    QUARANTINE_DIRNAME,
     apply_organization,
     build_duplicate_report,
     build_organized_filename,
@@ -15,6 +16,7 @@ from foto_organizer.core.organizer import (
     find_duplicates_by_hash,
     find_duplicates_by_name_and_size,
     plan_organization,
+    quarantine_duplicates,
     resolve_capture_date,
     write_duplicate_report,
 )
@@ -131,6 +133,22 @@ def test_find_duplicates_by_name_and_size_is_a_fast_heuristic(tmp_path: Path) ->
 
     assert len(groups) == 1
     assert len(groups[0].paths) == 2
+
+
+def test_quarantine_duplicates_moves_files_preserving_relative_path(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    (source / "cumple").mkdir(parents=True)
+    original = source / "cumple" / "IMG_0100_copia.jpg"
+    original.write_bytes(b"contenido-identico")
+
+    moved = quarantine_duplicates([str(original)], source)
+
+    expected = source / QUARANTINE_DIRNAME / "cumple" / "IMG_0100_copia.jpg"
+    assert moved == [expected]
+    assert expected.is_file()
+    assert not original.exists()
 
 
 def test_build_and_write_duplicate_report(tmp_path: Path) -> None:

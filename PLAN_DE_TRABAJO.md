@@ -164,6 +164,9 @@ foto-organizer/
 - [x] **F-35** Vista de duplicados
   - Muestra pares/grupos de duplicados
   - Selección manual de cuál conservar
+  - Al aceptar, los duplicados no elegidos se mueven a
+    `duplicados_a_revisar/` dentro del origen (nunca se borran
+    automáticamente; el usuario los borra a mano cuando quiera)
 - [x] **F-36** Pantalla de configuración (`settings_dialog.py`)
   - Formato de organización de carpetas
   - Extensiones a incluir/excluir
