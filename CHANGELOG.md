@@ -7,6 +7,20 @@ versionado según [SemVer](https://semver.org/lang/es/).
 
 ### Added
 
+- Fase 3 — Interfaz de usuario (PySide6): `main_window.py` (ventana
+  principal con menús Archivo/Herramientas/Ayuda, árbol de carpetas del
+  origen, selección de directorios origen/backup con validación de que
+  no coincidan, panel de progreso con log en vivo vía sink de loguru y
+  cancelación de operaciones en segundo plano), `gallery_view.py` (grid
+  de thumbnails con selección múltiple y vista previa ampliada al hacer
+  doble click), `verification_dialog.py` (reporte de verificación con
+  doble confirmación: checkbox de revisión + frase "CONFIRMAR" antes de
+  habilitar el borrado del origen), `duplicates_dialog.py` (grupos de
+  duplicados confirmados por hash, con selección manual de cuál
+  conservar) y `settings_dialog.py` (formato de carpetas, extensiones
+  incluidas/excluidas y directorio de backup por defecto, persistidos en
+  `~/.foto_organizer/settings.json`). Tests con `pytest-qt` para los
+  cinco componentes de UI.
 - Fase 2 — Organización de archivos: `metadata.py` (EXIF: fecha de captura,
   GPS, modelo de cámara; duración de vídeo vía ffprobe con fallback si no
   está disponible), `organizer.py` (organización por fecha `YYYY/MM-Mes`,

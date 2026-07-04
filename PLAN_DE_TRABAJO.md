@@ -142,32 +142,37 @@ foto-organizer/
 ### FASE 3 — Interfaz de Usuario (PySide6)
 **Branch:** `feat/ui-main-window`
 
-- [ ] **F-30** Ventana principal (`main_window.py`)
+- [x] **F-30** Ventana principal (`main_window.py`)
   - Menú: Archivo, Herramientas, Ayuda
   - Barra de estado con progreso
   - Layout: panel izquierdo (árbol carpetas) + panel derecho (galería)
-- [ ] **F-31** Selector de directorio fuente y destino
+- [x] **F-31** Selector de directorio fuente y destino
   - Diálogo nativo del OS
   - Validación: directorios no pueden ser el mismo
-- [ ] **F-32** Vista de galería (`gallery_view.py`)
+- [x] **F-32** Vista de galería (`gallery_view.py`)
   - Grid de thumbnails scrolleable
   - Click → vista previa ampliada
   - Selección múltiple
-- [ ] **F-33** Panel de progreso
+- [x] **F-33** Panel de progreso
   - Barra de progreso por operación
   - Log en tiempo real de operaciones
   - Botón cancelar operación
-- [ ] **F-34** Diálogo de verificación pre-borrado
+- [x] **F-34** Diálogo de verificación pre-borrado
   - Muestra reporte de verificación
   - Requiere escribir "CONFIRMAR" para proceder
   - Checkbox "He revisado el reporte completo"
-- [ ] **F-35** Vista de duplicados
+- [x] **F-35** Vista de duplicados
   - Muestra pares/grupos de duplicados
   - Selección manual de cuál conservar
-- [ ] **F-36** Pantalla de configuración (`settings_dialog.py`)
+- [x] **F-36** Pantalla de configuración (`settings_dialog.py`)
   - Formato de organización de carpetas
   - Extensiones a incluir/excluir
   - Directorio de backup por defecto
+
+> **Nota:** las operaciones largas (backup, organización) corren en un
+> `QThread` (`ui/workers.py`); "cancelar" hace `terminate()` del hilo, lo
+> cual es seguro porque estas operaciones solo escriben en el destino
+> (backup/organización copiada), nunca tocan ni borran el origen.
 
 ---
 
