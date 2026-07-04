@@ -44,6 +44,10 @@ python_version = "3.12"
 files = ["src", "tests"]
 mypy_path = "src"
 
+[[tool.mypy.overrides]]
+module = ["ffmpeg.*", "pillow_heif.*"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v"

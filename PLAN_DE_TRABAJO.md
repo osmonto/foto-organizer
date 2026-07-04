@@ -112,24 +112,30 @@ foto-organizer/
 ### FASE 2 — Core: Organización de Archivos
 **Branch:** `feat/file-organizer`
 
-- [ ] **F-20** `metadata.py` — Extraer metadata EXIF/ID3
+- [x] **F-20** `metadata.py` — Extraer metadata EXIF/ID3
   - Fecha de captura (EXIF DateTimeOriginal)
   - GPS coordinates (si existen)
   - Modelo de cámara/dispositivo
   - Duración (vídeos)
-- [ ] **F-21** Organización por fecha
+- [x] **F-21** Organización por fecha
   - Estructura: `YYYY/MM-NombreMes/` (ej: `2024/03-Marzo/`)
   - Fallback a fecha de modificación si no hay EXIF
-- [ ] **F-22** Detección de duplicados
+- [x] **F-22** Detección de duplicados
   - Comparar por hash SHA256
   - Comparar por nombre + tamaño como heurística rápida
   - Generar reporte de duplicados antes de actuar
-- [ ] **F-23** Renombrado automático de archivos
+- [x] **F-23** Renombrado automático de archivos
   - Formato: `YYYYMMDD_HHMMSS_original_name.ext`
   - Manejo de colisiones (añadir sufijo `_01`, `_02`, etc.)
-- [ ] **F-24** Generación de thumbnails
+- [x] **F-24** Generación de thumbnails *(solo fotos; vídeo queda pendiente — ver nota)*
   - Para galería UI: 256x256px
   - Cache local de thumbnails (evitar regeneración)
+
+> **Nota F-24:** el thumbnail de vídeo requeriría extraer un fotograma vía
+> `ffmpeg`, cuyo binario (`ffprobe`/`ffmpeg`) no está instalado en esta
+> máquina de desarrollo. Sin poder ejecutarlo y verificar el resultado, se
+> prefirió no añadir ese código sin probar. Cuando haya un entorno con
+> `ffmpeg` disponible, se puede extender `get_or_create_thumbnail`.
 
 ---
 
@@ -180,7 +186,7 @@ foto-organizer/
   - Test: detección correcta de formatos
   - Test: manejo de directorios vacíos
   - Test: manejo de archivos sin extensión
-- [ ] **F-43** Tests unitarios `test_organizer.py`
+- [x] **F-43** Tests unitarios `test_organizer.py`
   - Test: organización correcta por fecha EXIF
   - Test: fallback a fecha de modificación
   - Test: manejo de colisiones de nombres
