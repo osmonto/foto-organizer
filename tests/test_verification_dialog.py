@@ -57,3 +57,12 @@ def test_wrong_confirmation_phrase_keeps_button_disabled(qtbot: QtBot) -> None:
     dialog._confirmation_edit.setText("confirmar")
 
     assert not _ok_button(dialog).isEnabled()
+
+
+def test_confirmation_phrase_returns_typed_text(qtbot: QtBot) -> None:
+    dialog = VerificationDialog(_OK_RESULTS)
+    qtbot.addWidget(dialog)
+
+    dialog._confirmation_edit.setText("CONFIRMAR")
+
+    assert dialog.confirmation_phrase() == "CONFIRMAR"
