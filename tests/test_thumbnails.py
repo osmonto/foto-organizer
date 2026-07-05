@@ -61,3 +61,21 @@ def test_get_or_create_thumbnail_returns_none_for_video(tmp_path: Path) -> None:
     result = get_or_create_thumbnail(media_file, tmp_path / "cache")
 
     assert result is None
+
+
+def test_get_or_create_thumbnail_returns_none_for_corrupt_photo(
+    tmp_path: Path,
+) -> None:
+    photo_path = tmp_path / "roto.jpg"
+    photo_path.write_bytes(b"esto no es un jpeg")
+    stat = photo_path.stat()
+    media_file = MediaFile(
+        path=photo_path,
+        media_type=MediaType.PHOTO,
+        size_bytes=stat.st_size,
+        modified_at=datetime.fromtimestamp(stat.st_mtime),
+    )
+
+    result = get_or_create_thumbnail(media_file, tmp_path / "cache")
+
+    assert result is None

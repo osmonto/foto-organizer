@@ -12,6 +12,7 @@ uv run ruff check --fix .     # lint
 uv run ruff format .          # format
 uv run mypy                   # strict type check (src + tests)
 uv run pytest tests/ -v       # full test suite
+uv run pytest tests/ --cov    # test suite + coverage (fails below 90%)
 uv run pytest tests/test_organizer.py -v                    # single file
 uv run pytest tests/test_organizer.py::test_name -v         # single test
 uv run python -m foto_organizer  # run the desktop app
@@ -23,6 +24,17 @@ Qt libs (`libegl1`, `libgl1`, `libxkbcommon0`, `libdbus-1-3`) — see `.github/w
 
 Pre-commit runs ruff check/format and mypy on every commit; a failing hook blocks the
 commit, so fix the issue and re-commit rather than bypassing it.
+
+**Test coverage must stay at or above 90%** (currently at 100% — don't let it
+regress). The floor is enforced: `fail_under = 90` under `[tool.coverage.report]` in
+`pyproject.toml`, and CI runs `pytest --cov`, which fails the build below it. Any new
+or changed code ships with tests — run `uv run pytest tests/ --cov` and check the
+report before considering a change done. The only sanctioned exclusion is the
+`if __name__ == "__main__":` guard (via `exclude_also`); do not add
+`# pragma: no cover` to dodge a hard-to-test path — make it testable instead (the UI
+tests monkeypatch `QFileDialog`/`QMessageBox`/dialog `exec` for exactly this, and
+`workers.py` is covered by calling `run()` synchronously because coverage cannot
+trace native `QThread` threads).
 
 ## Architecture
 

@@ -3,6 +3,7 @@
 from datetime import datetime
 from pathlib import Path
 
+import pytest
 from PIL import Image
 from PIL.ExifTags import IFD
 
@@ -81,3 +82,58 @@ def test_extract_metadata_video_falls_back_gracefully_without_ffprobe(
 
     assert metadata.duration_seconds is None
     assert metadata.captured_at is None
+
+
+def test_extract_metadata_ignores_malformed_exif_datetime(tmp_path: Path) -> None:
+    photo_path = tmp_path / "foto.jpg"
+    _make_photo_with_exif(
+        photo_path, datetime_original="no es una fecha", model="TestCamera"
+    )
+
+    metadata = extract_metadata(photo_path, MediaType.PHOTO)
+
+    assert metadata.captured_at is None
+    assert metadata.camera_model == "TestCamera"
+
+
+def test_extract_metadata_gps_without_coordinates_returns_none(
+    tmp_path: Path,
+) -> None:
+    photo_path = tmp_path / "foto.jpg"
+    image = Image.new("RGB", (10, 10), color="red")
+    exif = image.getexif()
+    # IFD GPS presente pero solo con la referencia, sin lat/lon
+    exif.get_ifd(IFD.GPSInfo)[1] = "N"
+    image.save(photo_path, format="JPEG", exif=exif)
+
+    metadata = extract_metadata(photo_path, MediaType.PHOTO)
+
+    assert metadata.gps is None
+
+
+def test_extract_metadata_video_reads_duration_from_probe(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import ffmpeg
+
+    monkeypatch.setattr(
+        ffmpeg,
+        "probe",
+        lambda path: {"format": {"duration": "12.5"}},
+    )
+
+    metadata = extract_metadata(tmp_path / "video.mp4", MediaType.VIDEO)
+
+    assert metadata.duration_seconds == 12.5
+
+
+def test_extract_metadata_video_without_duration_field(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import ffmpeg
+
+    monkeypatch.setattr(ffmpeg, "probe", lambda path: {"format": {}})
+
+    metadata = extract_metadata(tmp_path / "video.mp4", MediaType.VIDEO)
+
+    assert metadata.duration_seconds is None
